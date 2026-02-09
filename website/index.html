@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extra Ball Studios</title>
+  <meta name="description" content="Small studio. Big pixels. Home of Bad Thumbs.">
+  <meta property="og:title" content="Extra Ball Studios">
+  <meta property="og:description" content="Small studio. Big pixels. Home of Bad Thumbs.">
+  <meta property="og:image" content="https://www.extraballstudios.com/assets/banner.png">
+  <meta property="og:url" content="https://www.extraballstudios.com">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/png" href="assets/icon-512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ── Variables ── */
+    :root {
+      --bg: #0a0a1a;
+      --card: #1a1a2e;
+      --cyan: #00f5ff;
+      --gold: #f59e0b;
+      --text: #e0e0e0;
+      --muted: #667788;
+      --pixel: 'Press Start 2P', monospace;
+      --mono: 'Space Mono', monospace;
+    }
+
+    /* ── Base ── */
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Scanline Overlay ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.08) 2px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 80px 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Floating Tiles Background ── */
+    .floating-tiles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .floating-tile {
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      opacity: 0.12;
+      image-rendering: pixelated;
+      background-size: auto 100%;
+      background-position: 0 0;
+      background-repeat: no-repeat;
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(110vh) rotate(0deg); }
+      100% { transform: translateY(-120px) rotate(360deg); }
+    }
+
+    /* ── Main Content (above tiles) ── */
+    main { position: relative; z-index: 1; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 24px;
+    }
+    .hero-logo {
+      width: 256px;
+      height: 256px;
+      background: url('assets/logo.png') 0 0 no-repeat;
+      background-size: 768px 256px;
+      image-rendering: pixelated;
+      margin-bottom: 32px;
+      animation: sprite 0.6s steps(3) infinite;
+    }
+    @keyframes sprite {
+      to { background-position: -768px 0; }
+    }
+    .hero-title {
+      font-family: var(--pixel);
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: var(--cyan);
+      text-shadow:
+        0 0 10px rgba(0, 245, 255, 0.5),
+        0 0 30px rgba(0, 245, 255, 0.3),
+        0 0 60px rgba(0, 245, 255, 0.15);
+      animation: glow 3s ease-in-out infinite;
+      letter-spacing: 4px;
+      margin-bottom: 24px;
+    }
+    @keyframes glow {
+      0%, 100% {
+        text-shadow:
+          0 0 10px rgba(0, 245, 255, 0.5),
+          0 0 30px rgba(0, 245, 255, 0.3),
+          0 0 60px rgba(0, 245, 255, 0.15);
+      }
+      50% {
+        text-shadow:
+          0 0 15px rgba(0, 245, 255, 0.7),
+          0 0 40px rgba(0, 245, 255, 0.5),
+          0 0 80px rgba(0, 245, 255, 0.3);
+      }
+    }
+    .hero-tagline {
+      font-family: var(--mono);
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--muted);
+      letter-spacing: 2px;
+    }
+
+    /* ── About ── */
+    .about-box {
+      border: 1px solid rgba(0, 245, 255, 0.2);
+      border-radius: 8px;
+      padding: 32px;
+      max-width: 700px;
+      margin: 0 auto;
+      background: var(--card);
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      text-align: center;
+    }
+
+    /* ── Section Headings ── */
+    .section-heading {
+      font-family: var(--pixel);
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: var(--cyan);
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    /* ── Games Section ── */
+    .game-card {
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 245, 255, 0.15);
+      padding: 48px 32px;
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .game-icon {
+      width: 128px;
+      height: 128px;
+      border-radius: 24px;
+      image-rendering: pixelated;
+      margin-bottom: 24px;
+      box-shadow: 0 0 20px rgba(0, 245, 255, 0.2);
+    }
+    .game-title {
+      font-family: var(--pixel);
+      font-size: clamp(1.1rem, 3vw, 1.6rem);
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      font-family: var(--pixel);
+      font-size: 0.55rem;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      border-radius: 20px;
+      padding: 6px 16px;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+    }
+    .game-desc {
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto 40px;
+      line-height: 1.8;
+    }
+
+    /* ── Phone Mockup ── */
+    .phone-frame {
+      width: clamp(220px, 50vw, 280px);
+      margin: 0 auto 40px;
+      background: #111;
+      border-radius: 32px;
+      padding: 12px;
+      border: 3px solid #333;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .phone-notch {
+      width: 80px;
+      height: 6px;
+      background: #222;
+      border-radius: 3px;
+      margin: 4px auto 8px;
+    }
+    .phone-screen {
+      width: 100%;
+      border-radius: 20px;
+      display: block;
+    }
+
+    /* ── Play Store Badge ── */
+    .store-link {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+    .store-link:hover { transform: scale(1.05); }
+    .store-badge {
+      height: 60px;
+      width: auto;
+    }
+
+    /* ── Coming Soon ── */
+    .coming-soon {
+      text-align: center;
+      padding: 60px 0;
+    }
+    .coming-soon-text {
+      font-family: var(--pixel);
+      font-size: clamp(0.7rem, 2vw, 0.9rem);
+      color: var(--muted);
+      letter-spacing: 2px;
+    }
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--muted);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ── Contact ── */
+    .contact { text-align: center; }
+    .contact-heading {
+      font-family: var(--pixel);
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .contact-link {
+      color: var(--text);
+      text-decoration: none;
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      border-bottom: 1px solid rgba(0, 245, 255, 0.3);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .contact-link:hover {
+      color: var(--cyan);
+      border-color: var(--cyan);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      z-index: 1;
+    }
+    .footer-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .footer-link {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .footer-link:hover { border-color: var(--muted); }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .floating-tile { display: none; }
+      section { padding: 60px 0; }
+      .game-card { padding: 32px 20px; }
+      .hero { min-height: 80vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Tiles Background -->
+  <div class="floating-tiles" id="floatingTiles"></div>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero visible">
+      <div class="hero-logo" role="img" aria-label="Extra Ball Studios"></div>
+      <h1 class="hero-title">EXTRABALL</h1>
+      <p class="hero-tagline">Small studio. Big pixels.</p>
+    </section>
+
+    <!-- About -->
+    <section>
+      <div class="container">
+        <div class="about-box">
+          <p>We make small, punchy games that are easy to pick up and impossible to put down. One-tap mechanics, pixel art vibes, and just the right amount of chaos.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Games -->
+    <section>
+      <div class="container">
+        <h2 class="section-heading">GAMES</h2>
+        <div class="game-card">
+          <img src="assets/icon-512.png" alt="Bad Thumbs" class="game-icon">
+          <h3 class="game-title">BAD THUMBS</h3>
+          <span class="badge">EARLY ACCESS</span>
+          <p class="game-desc">A fast-paced memory game that punishes slow thumbs. Watch the pattern, tap the tiles, try not to choke. Levels get harder. Grids start moving. Your thumbs will betray you.</p>
+          <div class="phone-frame">
+            <div class="phone-notch"></div>
+            <img src="assets/screenshot.jpg" alt="Bad Thumbs gameplay" class="phone-screen">
+          </div>
+          <a href="https://play.google.com/store/apps/details?id=com.extraballstudios.badthumbs" class="store-link" target="_blank" rel="noopener">
+            <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" class="store-badge">
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Coming Soon -->
+    <section class="coming-soon">
+      <div class="container">
+        <p class="coming-soon-text">MORE GAMES COMING SOON...<span class="cursor"></span></p>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact">
+      <div class="container">
+        <h2 class="contact-heading">SAY HELLO</h2>
+        <a href="mailto:extraballstudios@gmail.com" class="contact-link">extraballstudios@gmail.com</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p class="footer-text">&copy; 2026 Extra Ball Studios &nbsp;&middot;&nbsp; <a href="privacy.html" class="footer-link">Privacy Policy</a></p>
+  </footer>
+
+  <script>
+    // ── Floating Tiles ──
+    (function() {
+      var tiles = ['ghost','skull','star','fire','heart','pizza','alien','frog'];
+      var container = document.getElementById('floatingTiles');
+      tiles.forEach(function(name, i) {
+        var el = document.createElement('div');
+        el.className = 'floating-tile';
+        el.setAttribute('aria-hidden', 'true');
+        el.style.backgroundImage = 'url(assets/tiles/' + name + '.png)';
+        var duration = 18 + Math.random() * 10;
+        var left = 5 + (i / tiles.length) * 85 + Math.random() * 5;
+        var delay = -(Math.random() * duration);
+        var size = 36 + Math.random() * 24;
+        el.style.left = left + '%';
+        el.style.width = size + 'px';
+        el.style.height = size + 'px';
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = delay + 's';
+        container.appendChild(el);
+      });
+    })();
+
+    // ── Tile Sprite Animation ──
+    (function() {
+      var frame = 0;
+      setInterval(function() {
+        frame = 1 - frame;
+        var tiles = document.querySelectorAll('.floating-tile');
+        tiles.forEach(function(el) {
+          var w = parseFloat(el.style.width);
+          el.style.backgroundPosition = (-frame * w) + 'px 0';
+        });
+      }, 500);
+    })();
+
+    // ── Scroll Fade-In ──
+    (function() {
+      var sections = document.querySelectorAll('section:not(.hero)');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.15 });
+      sections.forEach(function(s) { observer.observe(s); });
+    })();
+  </script>
+</body>
+</html>
